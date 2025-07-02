@@ -7,7 +7,7 @@
  * displayed in the chat section.
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 // Components
 import ChatBox from '@/components/ChatBox'
@@ -20,24 +20,19 @@ import { Message } from '@/types/app.types'
 // Styles
 import styles from '@/styles/page.module.css'
 
+// Services
+import { chatBot } from '@/services/backend'
+
 export default function Home() {
 
     const [messages, setMessages] = useState<Message[]>([])
+    const chatSectionRef = useRef<HTMLDivElement>(null)
 
     const loadData = async () => {
         // TO DO:: Load data from the server
-        const data: Message[] = [
-            {
-                id: '1',
-                content: 'Hello, how can I help you?',
-                source: 'agent'
-            },
-            {
-                id: '2',
-                content: 'I need help with my account.',
-                source: 'user'
-            },
-        ]
+        const data: Message[] = await chatBot(null)
+        console.log('Loaded messages from server:')
+        console.log(data)
         setMessages(data)
     }
 
@@ -63,6 +58,13 @@ export default function Home() {
         )
     }
 
+    // Auto-scroll to bottom when new messages are added
+    useEffect(() => {
+        if (chatSectionRef.current) {
+            chatSectionRef.current.scrollTop = chatSectionRef.current.scrollHeight
+        }
+    }, [messages])
+
     useEffect(() => {
         loadData()
     }, [])
@@ -70,11 +72,17 @@ export default function Home() {
     return (
         <div className={styles.main_container}>
             {/* Messages */}
-            <div className={styles.chat_section}>
+            <div 
+                ref={chatSectionRef} 
+                className={styles.chat_section}
+            >
                 {renderMessages()}
             </div>
             {/* Chat Box */}
-            <ChatBox />
+            <ChatBox 
+                messages={messages} 
+                setMessages={setMessages} 
+            />
         </div>
     )
 }

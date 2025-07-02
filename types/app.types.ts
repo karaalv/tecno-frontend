@@ -12,3 +12,10 @@ export interface Message {
     content: string;
     source: 'user' | 'agent';
 }
+
+export interface BackendResponse<T> {
+    status: boolean;
+    data?: {
+        messages: T;
+    };
+}
