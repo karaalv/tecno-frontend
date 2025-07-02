@@ -1,0 +1,20 @@
+/* User Message Component Styles */
+
+.container {
+    /* Properties */
+    background-color: var(--Grey);
+    border-radius: var(--Radius);
+    padding: 1%;
+    box-sizing: border-box;
+
+    /* Dimensions */
+    width: fit-content;
+    max-width: 50%;
+    height: fit-content;
+
+    /* Arrangement */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: flex-end;
+}

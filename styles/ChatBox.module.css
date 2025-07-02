@@ -1,0 +1,82 @@
+/* Chat Box Component Styles */
+
+.main_container {
+    /* Dimensions */
+    width: 100%;
+
+    /* Position */
+    position: fixed;
+    bottom: 2rem;
+    left: 0;
+    right: 0;
+    z-index: 10;
+
+    /* Arrangement */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sub_container {
+    /* Dimensions */
+    width: 70%;
+    min-height: 4.5rem;
+    height: auto;
+    border-radius: var(--Radius);
+    padding: 1%;
+    box-sizing: border-box;
+
+    /* Decoration */
+    border: 1.5px solid var(--Grey);
+
+    /* Decoration */
+    border-radius: var(--Radius);
+    background-color: var(--Secondary);
+
+    /* Arrangement */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icon_container {
+    /* Dimensions */
+    width: 3rem;
+    height: 3rem;
+
+    /* Arrangement */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Decoration */
+    border-radius: var(--Radius);
+    background-color: var(--Grey);
+}
+
+.chat_input {
+    /* Dimensions */
+    width: 90%;
+    min-height: 1.5rem;
+    height: auto;
+    max-height: 20rem;
+
+    /* Properties */
+    padding-left: 1%;
+    padding-right: 1%;
+    border-radius: var(--Radius);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    resize: none;
+    line-height: 1.5;
+    box-sizing: border-box;
+
+    /* Removing Styles */
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.chat_input::placeholder {
+    color: var(--Grey);
+}

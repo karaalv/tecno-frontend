@@ -1,0 +1,10 @@
+/* Typography Styles */
+
+.body {
+    font-family: var(--Primary_font);
+    color: var(--Primary);
+    font-size: 1.8rem;
+    line-height: 3rem;
+    font-weight: normal;
+    margin: 0%;
+}

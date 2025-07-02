@@ -1,0 +1,19 @@
+/* Agent Message Component Styles */
+
+.container {
+    /* Properties */
+    padding: 1%;
+    box-sizing: border-box;
+
+    /* Dimensions */
+    width: fit-content;
+    max-width: 50%;
+    height: fit-content;
+
+    /* Arrangement */
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    gap: 0.5rem;
+}
+

@@ -1,95 +1,116 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+/**
+ * @description This is the main page of the
+ * Tecno ESG application. It displays the chat
+ * messages and the chat box for user input.
+ * The messages are loaded from the server and
+ * displayed in the chat section.
+ */
+
+import { useState, useEffect } from 'react'
+
+// Components
+import ChatBox from '@/components/ChatBox'
+import UserMessage from '@/components/UserMessage'
+import AgentMessage from '@/components/AgentMessage'
+
+// Types
+import { Message } from '@/types/app.types'
+
+// Styles
+import styles from '@/styles/page.module.css'
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+    const [messages, setMessages] = useState<Message[]>([])
+
+    const loadData = async () => {
+        // TO DO:: Load data from the server
+        const data: Message[] = [
+            {
+                id: '1',
+                content: 'Hello, how can I help you?',
+                source: 'agent'
+            },
+            {
+                id: '2',
+                content: 'I need help with my account.',
+                source: 'user'
+            },
+            {
+                id: '3',
+                content: 'Sure, I can assist you with that.',
+                source: 'agent'
+            },
+            {
+                id: '4',
+                content: 'Thank you!',
+                source: 'user'
+            },
+            {
+                id: '5',
+                content: 'You are welcome.',
+                source: 'agent'
+            },
+            {
+                id: '6',
+                content: 'What is the status of my order?',
+                source: 'user'
+            },
+            {
+                id: '7',
+                content: 'Your order is being processed.',
+                source: 'agent'
+            },
+            {
+                id: '8',
+                content: 'When will it be delivered?',
+                source: 'user'
+            },
+            {
+                id: '9',
+                content: 'It will be delivered within 3-5 business days.',
+                source: 'agent'
+            }
+        ]
+        setMessages(data)
+    }
+
+    const renderMessages = () => {
+        return (
+            messages.map((message: Message) => {
+                if (message.source === 'user') {
+                    return (
+                        <UserMessage 
+                            key={message.id} 
+                            message={message.content} 
+                        />
+                    )
+                } else if (message.source === 'agent') {
+                    return (
+                        <AgentMessage 
+                            key={message.id} 
+                            message={message.content} 
+                        />
+                    )
+                }
+            })
+        )
+    }
+
+    useEffect(() => {
+        loadData()
+    }, [])
+    
+    return (
+        <div className={styles.main_container}>
+            <div className={styles.chat_section}>
+                {renderMessages()}
+            </div>
+
+            {/* Main Container */}
+            {/* Chat Box */}
+            <ChatBox />
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    )
 }

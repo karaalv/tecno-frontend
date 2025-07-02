@@ -1,0 +1,23 @@
+/* Global Styles */
+
+/* Import inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+/* Root level variables */
+
+/* Fonts */
+:root {
+    --Primary_font: 'Inter', 'Helvetica', 'Arial', sans-serif;
+}
+
+/* Colours */
+:root {
+    --Primary: #000000;
+    --Secondary: #FFFFFF;
+    --Grey: #CCCCCC;
+}
+
+/* Properties */
+:root {
+    --Radius: 3rem;
+}
