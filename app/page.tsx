@@ -37,41 +37,6 @@ export default function Home() {
                 content: 'I need help with my account.',
                 source: 'user'
             },
-            {
-                id: '3',
-                content: 'Sure, I can assist you with that.',
-                source: 'agent'
-            },
-            {
-                id: '4',
-                content: 'Thank you!',
-                source: 'user'
-            },
-            {
-                id: '5',
-                content: 'You are welcome.',
-                source: 'agent'
-            },
-            {
-                id: '6',
-                content: 'What is the status of my order?',
-                source: 'user'
-            },
-            {
-                id: '7',
-                content: 'Your order is being processed.',
-                source: 'agent'
-            },
-            {
-                id: '8',
-                content: 'When will it be delivered?',
-                source: 'user'
-            },
-            {
-                id: '9',
-                content: 'It will be delivered within 3-5 business days.',
-                source: 'agent'
-            }
         ]
         setMessages(data)
     }
@@ -104,11 +69,10 @@ export default function Home() {
     
     return (
         <div className={styles.main_container}>
+            {/* Messages */}
             <div className={styles.chat_section}>
                 {renderMessages()}
             </div>
-
-            {/* Main Container */}
             {/* Chat Box */}
             <ChatBox />
         </div>

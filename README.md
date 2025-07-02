@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💬 Tecno Consulting ESG Chat Application
 
-## Getting Started
+This is the frontend for the **Tecno Consulting ESG Chat Application**, built with **Next.js** and **TypeScript**. It provides a modern interface for interacting with an ESG-focused conversational system.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Chat Interface** – Users can send and receive messages in a real-time chat format.
+- **Message History** – Previous messages are loaded and displayed in the conversation window.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Development Conventions
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This project uses React (via Next.js) with TypeScript. The following conventions are observed:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🧑‍💻 Code Style
 
-## Learn More
+- Variable names use `camelCase`.
+- Component names use `PascalCase`.
+- Semicolons are not required.
+- Functions inside components use **arrow syntax**.
+- Components are written using **function declarations**.
 
-To learn more about Next.js, take a look at the following resources:
+### 📁 File Naming
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Component files use `PascalCase` (e.g., `ChatBox.tsx`).
+- Utility and helper files use `camelCase` (e.g., `formatDate.ts`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🎨 Styling
 
-## Deploy on Vercel
+- Styles are written using **CSS Modules**.
+- Style files are named to match their components or pages (`PascalCase.module.css`).
+- Class names use `snake_case` to avoid conflicts with standard CSS properties.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🧾 Comments & Documentation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Use **JSDoc** for documenting components and utility functions.
+- Each page file begins with a brief description of its purpose.
+- Inline comments are used to clarify non-obvious logic or UI behavior.
+
+### ⚛️ React & TypeScript
+
+- State and props are **strongly typed** wherever possible.
+- Components are modular and reusable.
+- Types are colocated in `types/`, with subfolders mirroring the structure of the code they describe.
+
+## 🗂️ Project Structure
+
+The codebase follows a modular, feature-based structure:
+
+- `app/` – Contains main application files, including layouts and pages.
+- `components/` – Reusable UI components.
+- `public/` – Static assets such as images and fonts.
+- `styles/` – Global and component-specific CSS modules.
+- `services/` – API functions for backend communication.
+- `utils/` – Utility functions and constants.
+- `types/` – TypeScript definitions and interfaces.
+
+Nested folder conventions are used for clarity. For example, service types are located in `types/services/`, corresponding to their implementations in `services/`.
