@@ -13,6 +13,7 @@ import { useState, useEffect, useRef } from 'react'
 import ChatBox from '@/components/ChatBox'
 import UserMessage from '@/components/UserMessage'
 import AgentMessage from '@/components/AgentMessage'
+import ProgressBar from '@/components/ProgressBar'
 
 // Types
 import { Message } from '@/types/app.types'
@@ -25,7 +26,15 @@ import { chatBot } from '@/services/backend'
 
 export default function Home() {
 
+    //const data = {                      //THIS IS PROGRESS BAR SAMPLE DATA -- FOR TESTING PURPOSES
+    //    group1: ["value1", "value2"],
+    //    group2: [null],
+    //    group3: ["filled", 123],
+    //    group4: [undefined],
+    //};                                  //PROGRESS BAR DATA ENDS HERE
+
     const [messages, setMessages] = useState<Message[]>([])
+    const [progressData, setProgressData] = useState<Record<string, any[]>>({});
     const chatSectionRef = useRef<HTMLDivElement>(null)
 
     const loadData = async () => {
@@ -58,6 +67,39 @@ export default function Home() {
         )
     }
 
+    //Typecast Json fields into desired fields
+    type OrgData = {
+    org_name: string;
+    org_version: string;
+    org_private: boolean;
+    org_scripts: Record<string, string>;
+    org_dependencies: Record<string, string>;
+    org_devDependencies: Record<string, string | null>;
+    };
+
+    useEffect(() => {
+        const fetchProgressData = async () => {
+            const res = await fetch("/demo.json");
+            const json: OrgData = await res.json();
+
+            const transformed: Record<string, any[]> = {
+                Scripts: Object.values(json.org_scripts || {}),
+                Dependencies: Object.values(json.org_dependencies || {}),
+                DevDependencies: Object.values(json.org_devDependencies || {}),
+                Metadata: [json.org_name, json.org_version, json.org_private],
+            };
+
+            console.log("Transformed progress data:", transformed);
+            setProgressData(transformed);
+        };
+
+        fetchProgressData(); // initial fetch
+
+        const interval = setInterval(fetchProgressData, 10); // refresh every 4s
+
+        return () => clearInterval(interval); // cleanup
+    }, []);
+
     // Auto-scroll to bottom when new messages are added
     useEffect(() => {
         if (chatSectionRef.current) {
@@ -69,6 +111,7 @@ export default function Home() {
         loadData()
     }, [])
     
+    console.log(progressData)
     return (
         <div className={styles.main_container}>
             {/* Messages */}
@@ -83,6 +126,8 @@ export default function Home() {
                 messages={messages} 
                 setMessages={setMessages} 
             />
+            {/* Progress Bar */} 
+            <ProgressBar data={progressData} />
         </div>
     )
 }

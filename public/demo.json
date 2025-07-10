@@ -1,0 +1,23 @@
+{
+  "org_name": "tecno-frontend",
+  "org_version": "0.1.0",
+  "org_private": true,
+  "org_scripts": {
+    "org_dev": "next dev -H 127.0.0.1",
+    "org_build": "next build",
+    "org_start": "next start",
+    "org_lint": "next lint"
+  },
+  "org_dependencies": {
+    "org_lucide-react": "^0.525.0",
+    "org_next": "15.3.4",
+    "org_react": "^19.0.0",
+    "org_react-dom": "^19.0.0"
+  },
+  "org_devDependencies": {
+    "org_types_node": "^20",
+    "org_types_react": null,
+    "org_types_react_dom": "^19",
+    "org_typescript": "1212"
+  }
+}
