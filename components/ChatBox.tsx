@@ -5,7 +5,7 @@
  * to enter messages.
  */
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { ArrowUp } from 'lucide-react'
 
 // Types
@@ -15,8 +15,8 @@ import { Message } from '@/types/app.types'
 import { chatBot } from '@/services/backend'
 
 // Styles
-import styles from '@/styles/ChatBox.module.css'
-import fonts from '@/styles/typography.module.css'
+import styles from '@/styles/components/ChatBox.module.css'
+import fonts from '@/styles/common/typography.module.css'
 
 interface ChatBoxProps {
     messages: Message[]

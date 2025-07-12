@@ -18,7 +18,7 @@ import AgentMessage from '@/components/AgentMessage'
 import { Message } from '@/types/app.types'
 
 // Styles
-import styles from '@/styles/page.module.css'
+import styles from '@/styles/pages/onboarding_page.module.css'
 
 // Services
 import { chatBot } from '@/services/backend'

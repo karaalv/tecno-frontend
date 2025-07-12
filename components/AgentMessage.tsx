@@ -4,8 +4,8 @@
  */
 
 // Styles
-import fonts from '@/styles/typography.module.css'
-import styles from '@/styles/AgentMessage.module.css'
+import fonts from '@/styles/common/typography.module.css'
+import styles from '@/styles/components/AgentMessage.module.css'
 
 export default function AgentMessage(
     { message }: Readonly<{ message: string }>,

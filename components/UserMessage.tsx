@@ -4,8 +4,8 @@
  */
 
 // Styles
-import fonts from '@/styles/typography.module.css'
-import styles from '@/styles/UserMessage.module.css'
+import fonts from '@/styles/common/typography.module.css'
+import styles from '@/styles/components/UserMessage.module.css'
 
 export default function UserMessage(
     { message }: Readonly<{ message: string }>,

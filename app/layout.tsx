@@ -7,8 +7,8 @@
 import type { Metadata } from "next"
 
 // Styles
-import styles from "@/styles/root.module.css"
-import '@styles/globals.css'
+import styles from "@/styles/common/root.module.css"
+import '@styles/common/globals.css'
 
 export const metadata: Metadata = {
     title: "Tecno ESG",
