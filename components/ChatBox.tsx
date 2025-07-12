@@ -7,23 +7,26 @@
 
 import { useState, useRef } from 'react'
 import { ArrowUp } from 'lucide-react'
+import { getTimestamp } from '@/utils/processing'
 
 // Types
-import { Message } from '@/types/app.types'
+import { AgentChatMemory } from '@/types/app.types'
 
 // Services
-import { chatBot } from '@/services/backend'
+import { messageOnboardingChat } from '@/services/interface'
 
 // Styles
 import styles from '@/styles/components/ChatBox.module.css'
 import fonts from '@/styles/common/typography.module.css'
 
 interface ChatBoxProps {
-    messages: Message[]
-    setMessages: React.Dispatch<React.SetStateAction<Message[]>>
+    messages: AgentChatMemory[]
+    setMessages: React.Dispatch<React.SetStateAction<AgentChatMemory[]>>
 }
 
 export default function ChatBox({ messages, setMessages }: ChatBoxProps) {
+    const userId = 'user_001'
+    const agentName = 'onboarding_agent'
     const [message, setMessage] = useState<string>('')
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -45,12 +48,18 @@ export default function ChatBox({ messages, setMessages }: ChatBoxProps) {
     }
 
     const sendMessage = async () => {
-        if (!message.trim() || isLoading) return
+        
+        if (!message.trim() || isLoading) {
+            return
+        }
 
-        const userMessage: Message = {
-            id: Date.now().toString(),
+        const userMessage: AgentChatMemory = {
+            user_id: userId,
+            chat_id: `${userId}-${agentName}-${getTimestamp()}`,
+            timestamp: getTimestamp(),
             content: message.trim(),
-            source: 'user'
+            source: 'user',
+            agent_name: agentName
         }
 
         // Add user message to the chat
@@ -66,19 +75,17 @@ export default function ChatBox({ messages, setMessages }: ChatBoxProps) {
 
         try {
             // Send message to backend and get response
-            const responseMessages = await chatBot(userMessage.content)
+            const responseMessage = await messageOnboardingChat(
+                userId,
+                message.trim()
+            )
             
             // Add response messages to the chat
-            setMessages(responseMessages)
+            setMessages(prev => [...prev, responseMessage!])
         } catch (error) {
-            console.error('Error sending message:', error)
-            // Optionally add an error message to the chat
-            const errorMessage: Message = {
-                id: (Date.now() + 1).toString(),
-                content: 'Sorry, there was an error processing your message.',
-                source: 'agent'
-            }
-            setMessages(prev => [...prev, errorMessage])
+            /**
+             * @todo Handle error gracefully
+             */
         } finally {
             setIsLoading(false)
         }

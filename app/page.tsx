@@ -15,41 +15,39 @@ import UserMessage from '@/components/UserMessage'
 import AgentMessage from '@/components/AgentMessage'
 
 // Types
-import { Message } from '@/types/app.types'
+import { AgentChatMemory } from '@/types/app.types'
 
 // Styles
 import styles from '@/styles/pages/onboarding_page.module.css'
 
 // Services
-import { chatBot } from '@/services/backend'
+import { getOnboardingChatHistory } from '@/services/interface'
 
-export default function Home() {
+export default function OnboardingPage() {
 
-    const [messages, setMessages] = useState<Message[]>([])
+    const [messages, setMessages] = useState<AgentChatMemory[]>([])
     const chatSectionRef = useRef<HTMLDivElement>(null)
 
     const loadData = async () => {
-        // TO DO:: Load data from the server
-        const data: Message[] = await chatBot(null)
+        const data: AgentChatMemory[] = await getOnboardingChatHistory()
         console.log('Loaded messages from server:')
-        console.log(data)
         setMessages(data)
     }
 
     const renderMessages = () => {
         return (
-            messages.map((message: Message) => {
+            messages.map((message: AgentChatMemory) => {
                 if (message.source === 'user') {
                     return (
                         <UserMessage 
-                            key={message.id} 
+                            key={message.chat_id} 
                             message={message.content} 
                         />
                     )
                 } else if (message.source === 'agent') {
                     return (
                         <AgentMessage 
-                            key={message.id} 
+                            key={message.chat_id} 
                             message={message.content} 
                         />
                     )

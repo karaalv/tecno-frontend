@@ -3,19 +3,19 @@
  * and types used in the Tecno ESG application.
  */
 
-/**
- * Interface representing a message
- * in the chat application.
- */
-export interface Message {
-    id: string;
+// --- Backend Types ---
+
+export interface AgentChatMemory {
+    user_id: string;
+    chat_id: string;
+    timestamp: string;
     content: string;
-    source: 'user' | 'agent';
+    source: 'agent' | 'user';
+    agent_name: string;
 }
 
 export interface BackendResponse<T> {
-    status: boolean;
-    data?: {
-        messages: T;
-    };
+    success: boolean;
+    data: T | null;
+    error: string | null;
 }
