@@ -40,6 +40,28 @@ export async function backendRequest<T>(
 // --- Onboarding Service ---
 
 /**
+ * Start a new onboarding chat for a user.
+ * @param userId 
+ * @returns 
+ */
+async function startOnboardingChat(
+    userId: string = 'user_001'
+): Promise<AgentChatMemory> {
+    const response = await backendRequest<AgentChatMemory>(
+        `/onboarding/start/${userId}`,
+        'POST'
+    )
+
+    if (!response.success) {
+        throw new Error(
+            response.error || 'Failed to start onboarding chat'
+        )
+    }
+
+    return response.data!
+}
+
+/**
  * Fetch chat history for a user.
  * @param userId 
  * @returns 
@@ -51,13 +73,21 @@ export async function getOnboardingChatHistory(
         `/onboarding/history/${userId}`
     )
     
-    if (!response.success) {
+    if (!response.success || !response.data) {
         throw new Error(
             response.error || 'Failed to fetch chat history'
         )
     }
 
-    return response.data || []
+    const messages = response.data || []
+
+    // If no messages, start onboarding chat
+    if (messages.length === 0) {
+        const firstMessage = await startOnboardingChat(userId)
+        return [firstMessage]
+    } else {
+        return messages
+    }
 }
 
 /**

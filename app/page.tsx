@@ -13,6 +13,8 @@ import { useState, useEffect, useRef } from 'react'
 import ChatBox from '@/components/ChatBox'
 import UserMessage from '@/components/UserMessage'
 import AgentMessage from '@/components/AgentMessage'
+import ErrorMessage from '@/components/ErrorMessage'
+import ResponseLoader from '@/components/ResponseLoader'
 
 // Types
 import { AgentChatMemory } from '@/types/app.types'
@@ -26,12 +28,24 @@ import { getOnboardingChatHistory } from '@/services/interface'
 export default function OnboardingPage() {
 
     const [messages, setMessages] = useState<AgentChatMemory[]>([])
+    const [error, setError] = useState<string>('')
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const chatSectionRef = useRef<HTMLDivElement>(null)
 
     const loadData = async () => {
-        const data: AgentChatMemory[] = await getOnboardingChatHistory()
-        console.log('Loaded messages from server:')
-        setMessages(data)
+        setIsLoading(true)
+        try {
+            const data: AgentChatMemory[] = await getOnboardingChatHistory()
+            console.log('Loaded messages from server:')
+            console.log(data)
+            setMessages(data)
+            setError('')
+        } catch (err) {
+            console.error('Error loading messages:', err)
+            setError('Failed to load messages. Please try again later.')
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     const renderMessages = () => {
@@ -66,6 +80,12 @@ export default function OnboardingPage() {
     useEffect(() => {
         loadData()
     }, [])
+
+    const renderError = () => {
+        return (
+            <ErrorMessage error={error}/>
+        )
+    }
     
     return (
         <div className={styles.main_container}>
@@ -75,11 +95,15 @@ export default function OnboardingPage() {
                 className={styles.chat_section}
             >
                 {renderMessages()}
+                {isLoading && <ResponseLoader />}
+                {error && renderError()}
             </div>
             {/* Chat Box */}
             <ChatBox 
                 messages={messages} 
-                setMessages={setMessages} 
+                setMessages={setMessages}
+                setError={setError}
+                setIsLoading={setIsLoading}
             />
         </div>
     )

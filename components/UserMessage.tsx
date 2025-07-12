@@ -12,10 +12,8 @@ export default function UserMessage(
 ) {
     
     return (
-        <div className={styles.container}>
-            <p className={fonts.body}>
-                {message}
-            </p>
+        <div className={`${styles.container} ${fonts.body}`}>
+            {message}
         </div>
     )
 }

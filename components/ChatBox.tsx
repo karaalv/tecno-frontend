@@ -22,13 +22,17 @@ import fonts from '@/styles/common/typography.module.css'
 interface ChatBoxProps {
     messages: AgentChatMemory[]
     setMessages: React.Dispatch<React.SetStateAction<AgentChatMemory[]>>
+    setError: React.Dispatch<React.SetStateAction<string>>
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function ChatBox({ messages, setMessages }: ChatBoxProps) {
+export default function ChatBox(
+    { messages, setMessages, setError, setIsLoading }: ChatBoxProps
+) {
     const userId = 'user_001'
     const agentName = 'onboarding_agent'
     const [message, setMessage] = useState<string>('')
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoadingBox, setIsLoadingBox] = useState<boolean>(false)
     const inputRef = useRef<HTMLTextAreaElement>(null)
 
     const chatInput = (
@@ -49,7 +53,7 @@ export default function ChatBox({ messages, setMessages }: ChatBoxProps) {
 
     const sendMessage = async () => {
         
-        if (!message.trim() || isLoading) {
+        if (!message.trim() || isLoadingBox) {
             return
         }
 
@@ -72,6 +76,7 @@ export default function ChatBox({ messages, setMessages }: ChatBoxProps) {
         }
 
         setIsLoading(true)
+        setIsLoadingBox(true)
 
         try {
             // Send message to backend and get response
@@ -82,12 +87,13 @@ export default function ChatBox({ messages, setMessages }: ChatBoxProps) {
             
             // Add response messages to the chat
             setMessages(prev => [...prev, responseMessage!])
+            setError('')
         } catch (error) {
-            /**
-             * @todo Handle error gracefully
-             */
+            console.error('Error sending message:', error)
+            setError('Failed to send message. Please try again later.')
         } finally {
             setIsLoading(false)
+            setIsLoadingBox(false)
         }
     }
 
@@ -109,7 +115,7 @@ export default function ChatBox({ messages, setMessages }: ChatBoxProps) {
                     value={message}
                     onChange={chatInput}
                     onKeyDown={handleKeyPress}
-                    disabled={isLoading}
+                    disabled={isLoadingBox}
                     rows={1}
                 />
                 {/* Icon */}
@@ -117,11 +123,11 @@ export default function ChatBox({ messages, setMessages }: ChatBoxProps) {
                     className={styles.icon_container}
                     onClick={sendMessage}
                     style={{ 
-                        cursor: message.trim() && !isLoading ? 'pointer' : 'default',
-                        opacity: message.trim() && !isLoading ? 1 : 0.5 
+                        cursor: message.trim() && !isLoadingBox ? 'pointer' : 'default',
+                        opacity: message.trim() && !isLoadingBox ? 1 : 0.5 
                     }}
                 >
-                    {isLoading ? (
+                    {isLoadingBox ? (
                         <div className={styles.loading_square} />
                     ) : (
                         <ArrowUp className={styles.icon_con} />
