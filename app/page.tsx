@@ -9,6 +9,9 @@
 import { useState } from 'react'
 import { PanelRightOpen } from 'lucide-react'
 
+// Context
+import { useAppContext } from '@/contexts/AppContext'
+
 // Components
 import ChatPage from '@/components/pages/ChatPage'
 import DocumentPage from '@/components/pages/DocumentPage'
@@ -17,6 +20,7 @@ import DocumentPage from '@/components/pages/DocumentPage'
 import styles from '@/styles/pages/MainPage.module.css'
 
 export default function MainPage() {
+
     const [isDocumentPanelOpen, setIsDocumentPanelOpen] = useState(false)
     
     const toggleDocumentPanel = () => {

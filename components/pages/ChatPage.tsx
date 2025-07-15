@@ -17,6 +17,9 @@ import AgentMessage from '@/components/AgentMessage'
 import ErrorMessage from '@/components/ErrorMessage'
 import ResponseLoader from '@/components/ResponseLoader'
 
+// Context
+import { useAppContext } from '@/contexts/AppContext'
+
 // Types
 import { AgentChatMemory } from '@/types/app.types'
 
@@ -28,9 +31,10 @@ import { getOnboardingChatHistory } from '@/services/interface'
 
 export default function OnboardingPage() {
 
+    const { isLoading, setIsLoading } = useAppContext()
+    const { error, setError } = useAppContext()
+    const { isDocumentPanelOpen } = useAppContext()
     const [messages, setMessages] = useState<AgentChatMemory[]>([])
-    const [error, setError] = useState<string>('')
-    const [isLoading, setIsLoading] = useState<boolean>(false)
     const chatSectionRef = useRef<HTMLDivElement>(null)
 
     const loadData = async () => {
@@ -38,7 +42,6 @@ export default function OnboardingPage() {
         try {
             const data: AgentChatMemory[] = await getOnboardingChatHistory()
             console.log('Loaded messages from server:')
-            console.log(data)
             setMessages(data)
             setError('')
         } catch (err) {
@@ -94,7 +97,7 @@ export default function OnboardingPage() {
         <div className={styles.main_container}>
             {/* Messages */}
             <div 
-                ref={chatSectionRef} 
+                ref={chatSectionRef}
                 className={styles.chat_section}
             >
                 {renderMessages()}
@@ -105,8 +108,6 @@ export default function OnboardingPage() {
             <ChatBox 
                 messages={messages} 
                 setMessages={setMessages}
-                setError={setError}
-                setIsLoading={setIsLoading}
             />
         </div>
     )

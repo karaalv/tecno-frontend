@@ -56,6 +56,7 @@
 }
 
 /* Document Viewer */
+
 .document_viewer {
     /* Properties */
     width: 100%;
@@ -70,4 +71,20 @@
     background-color: #f3f4f6;
 }
 
+/* No Document page */
 
+.no_document {
+    /* Properties */
+    width: 100%;
+    height: 100%;
+    
+    /* Arrangement */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Text */
+    font-family: var(--Primary_font);
+    font-size: 2.4rem;
+    color: var(--Grey);
+}

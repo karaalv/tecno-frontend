@@ -9,6 +9,9 @@ import { useState, useRef } from 'react'
 import { ArrowUp, Paperclip, FileText, X } from 'lucide-react'
 import { getTimestamp } from '@/utils/processing'
 
+// Context
+import { useAppContext } from '@/contexts/AppContext'
+
 // Types
 import { AgentChatMemory } from '@/types/app.types'
 
@@ -22,18 +25,17 @@ import fonts from '@/styles/common/typography.module.css'
 interface ChatBoxProps {
     messages: AgentChatMemory[]
     setMessages: React.Dispatch<React.SetStateAction<AgentChatMemory[]>>
-    setError: React.Dispatch<React.SetStateAction<string>>
-    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function ChatBox(
-    { messages, setMessages, setError, setIsLoading }: ChatBoxProps
+    { messages, setMessages }: ChatBoxProps
 ) {
     const userId = 'user_001'
     const agentName = 'onboarding_agent'
+    const { isLoading, setIsLoading } = useAppContext()
+    const { error, setError } = useAppContext()
     const [message, setMessage] = useState<string>('')
     const [files, setFiles] = useState<File[]>([])
-    const [isLoadingBox, setIsLoadingBox] = useState<boolean>(false)
     const inputRef = useRef<HTMLTextAreaElement>(null)
 
     const chatInput = (
@@ -63,7 +65,7 @@ export default function ChatBox(
 
     const sendMessage = async () => {
         
-        if (!message.trim() || isLoadingBox) {
+        if (!message.trim() || isLoading) {
             return
         }
 
@@ -88,7 +90,6 @@ export default function ChatBox(
         }
 
         setIsLoading(true)
-        setIsLoadingBox(true)
 
         try {
             let responseMessage: AgentChatMemory | null = null
@@ -119,7 +120,6 @@ export default function ChatBox(
             setError('Failed to send message. Please try again later.')
         } finally {
             setIsLoading(false)
-            setIsLoadingBox(false)
         }
     }
 
@@ -183,7 +183,7 @@ export default function ChatBox(
                     value={message}
                     onChange={chatInput}
                     onKeyDown={handleKeyPress}
-                    disabled={isLoadingBox}
+                    disabled={isLoading}
                     rows={1}
                 />
                 {/* Icon */}
@@ -191,11 +191,11 @@ export default function ChatBox(
                     className={styles.icon_container}
                     onClick={sendMessage}
                     style={{ 
-                        cursor: message.trim() && !isLoadingBox ? 'pointer' : 'default',
-                        opacity: message.trim() && !isLoadingBox ? 1 : 0.5 
+                        cursor: message.trim() && !isLoading ? 'pointer' : 'default',
+                        opacity: message.trim() && !isLoading ? 1 : 0.5 
                     }}
                 >
-                    {isLoadingBox ? (
+                    {isLoading ? (
                         <div className={styles.loading_square} />
                     ) : (
                         <ArrowUp className={styles.icon_con} />

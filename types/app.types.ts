@@ -20,3 +20,21 @@ export interface BackendResponse<T> {
     data: T | null;
     error: string | null;
 }
+
+export interface UserData {
+    user_id: string;
+    has_onboarded: boolean;
+    documents: string[];
+    onboarding_report_url: string | null;
+}
+
+// --- Frontend Types ---
+
+export interface AppContextType {
+    isLoading: boolean;
+    setIsLoading: (loading: boolean) => void;
+    error: string;
+    setError: (error: string) => void;
+    isDocumentPanelOpen: boolean;
+    setIsDocumentPanelOpen: (open: boolean) => void;
+}

@@ -4,7 +4,7 @@
  */
 
 // Types
-import { AgentChatMemory, BackendResponse } from '@/types/app.types';
+import { AgentChatMemory, BackendResponse, UserData } from '@/types/app.types';
 
 // --- Generic Service ---
 
@@ -149,4 +149,27 @@ export async function messageOnboardingChat(
     }
 
     return response.data 
+}
+
+// --- User Service ---
+
+/**
+ * Fetch user data.
+ * @param userId 
+ * @returns 
+ */
+export async function getUserData(
+    userId: string = 'user_001'
+): Promise<UserData> {
+    const response = await backendRequest<UserData>(
+        `/user/data/${userId}`
+    )
+
+    if (!response.success) {
+        throw new Error(
+            response.error || 'Failed to fetch user data'
+        )
+    }
+
+    return response.data!
 }
