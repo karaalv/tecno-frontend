@@ -6,6 +6,8 @@
 // Types
 import { AgentChatMemory, BackendResponse } from '@/types/app.types';
 
+// --- Generic Service ---
+
 /**
  * Generic function to make backend 
  * requests.
@@ -35,6 +37,40 @@ export async function backendRequest<T>(
     }
 
     return await response.json() as BackendResponse<T>
+}
+
+/**
+ * Used to upload files to the backend.
+ * @param files 
+ * @param userId 
+ * @returns 
+ */
+export async function uploadFiles(
+    userId: string = 'user_001',
+    message: string,
+    files: File[]
+): Promise<AgentChatMemory> {
+    const formData = new FormData()
+    
+    files.forEach(file => formData.append('files', file))
+    formData.append('message', message)
+
+    const response_fetch = (await fetch(
+        `http://127.0.0.1:3001/onboarding/upload/${userId}`,
+        {
+            method: 'POST',
+            body: formData,
+        }
+    ))
+
+    const response = (
+        await response_fetch.json() as BackendResponse<AgentChatMemory>
+    )
+
+    if (!response.success) {
+        throw new Error(response.error || 'File upload failed')
+    }
+    return response.data!
 }
 
 // --- Onboarding Service ---

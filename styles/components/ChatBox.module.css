@@ -13,6 +13,7 @@
 
     /* Arrangement */
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -41,8 +42,8 @@
 
 .icon_container {
     /* Dimensions */
-    width: 3rem;
-    height: 3rem;
+    min-width: 3rem;
+    min-height: 3rem;
 
     /* Arrangement */
     display: flex;
@@ -93,4 +94,114 @@
     width: 2rem;
     height: 2rem;
     color: var(--Primary);
+}
+
+/* File Upload */
+
+.file_upload_icon {
+    width: 2rem;
+    height: 2rem;
+    color: var(--Primary);
+    position: absolute;
+    cursor: pointer;
+}
+
+.file_upload_container {
+    /* Dimensions */
+    min-width: 3rem;
+    min-height: 3rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--Radius);
+
+    /* Arrangement */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.file_upload_container:hover {
+    background-color: var(--Grey_50);
+    cursor: pointer;
+}
+
+.file_input {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    /* background-color: red; */
+    cursor: pointer;
+}
+
+/* Selected Files */
+
+.selected_files_container {
+    /* Dimensions */
+    width: 70%;
+    max-height: 10rem;
+    overflow-x: scroll;
+    padding: 0.5rem;
+    box-sizing: border-box;
+
+    /* Arrangement */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.files_preview {
+    /* Dimensions */
+    width: 100%;
+    max-height: 10rem;
+    overflow-y: auto;
+    padding: 0.5rem;
+    box-sizing: border-box;
+
+    /* Arrangement */
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.file_icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--Primary);
+}
+
+.file_item {
+    /* Arrangement */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+
+    /* Properties */
+    padding: 0.5rem;
+    border-radius: var(--Radius);
+    background-color: var(--Grey);
+}
+
+.remove_file_button {
+    /* Dimensions */
+    width: 2rem;
+    height: 2rem;
+
+    /* Arrangement */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Decoration */
+    border-radius: var(--Radius);
+    color: var(--Primary);
+    cursor: pointer;
+}
+
+.remove_file_button:hover {
+    background-color: var(--Secondary);
 }

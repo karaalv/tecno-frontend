@@ -6,14 +6,14 @@
  */
 
 import { useState, useRef } from 'react'
-import { ArrowUp } from 'lucide-react'
+import { ArrowUp, Paperclip, FileText, X } from 'lucide-react'
 import { getTimestamp } from '@/utils/processing'
 
 // Types
 import { AgentChatMemory } from '@/types/app.types'
 
 // Services
-import { messageOnboardingChat } from '@/services/interface'
+import { messageOnboardingChat, uploadFiles } from '@/services/interface'
 
 // Styles
 import styles from '@/styles/components/ChatBox.module.css'
@@ -32,6 +32,7 @@ export default function ChatBox(
     const userId = 'user_001'
     const agentName = 'onboarding_agent'
     const [message, setMessage] = useState<string>('')
+    const [files, setFiles] = useState<File[]>([])
     const [isLoadingBox, setIsLoadingBox] = useState<boolean>(false)
     const inputRef = useRef<HTMLTextAreaElement>(null)
 
@@ -51,6 +52,15 @@ export default function ChatBox(
         setMessage(event.target.value)
     }
 
+    const fileInput = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const selectedFiles = Array.from(event.target.files || [])
+        setFiles(prev=> [...prev, ...selectedFiles])
+        // Reset input value to allow re-uploading the same file
+        event.target.value = ''
+    }
+
     const sendMessage = async () => {
         
         if (!message.trim() || isLoadingBox) {
@@ -65,6 +75,7 @@ export default function ChatBox(
             source: 'user',
             agent_name: agentName
         }
+        const messageToSend = message.trim()
 
         // Add user message to the chat
         setMessages(prev => [...prev, userMessage])
@@ -79,12 +90,26 @@ export default function ChatBox(
         setIsLoadingBox(true)
 
         try {
-            // Send message to backend and get response
-            const responseMessage = await messageOnboardingChat(
-                userId,
-                message.trim()
-            )
+            let responseMessage: AgentChatMemory | null = null
             
+            if (files.length > 0) {
+                const filesToUpload = files
+                setFiles([])
+
+                // Upload files and get file upload response
+                responseMessage = await uploadFiles(
+                    userId,
+                    messageToSend,
+                    filesToUpload
+                )
+            } else {
+                // Send regular message
+                responseMessage = await messageOnboardingChat(
+                    userId,
+                    messageToSend
+                )
+            }
+
             // Add response messages to the chat
             setMessages(prev => [...prev, responseMessage!])
             setError('')
@@ -97,16 +122,58 @@ export default function ChatBox(
         }
     }
 
-    const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const handleKeyPress = (
+        event: React.KeyboardEvent<HTMLTextAreaElement>
+    ) => {
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault()
             sendMessage()
         }
     }
 
+    const removeFile = (index: number) => {
+        setFiles(prev => prev.filter((_, i) => i !== index))
+    }
+
+    const renderFilesPreview = () => {
+        if (files.length === 0) {
+            return <></>
+        }
+
+        return (
+            <div className={styles.files_preview}>
+                {files.map((file, index) => (
+                    <div key={index} className={styles.file_item}>
+                        <FileText className={styles.file_icon} />
+                        <span className={fonts.body}>{file.name}</span>
+                        <X 
+                            className={styles.remove_file_button}
+                            onClick={() => removeFile(index)}
+                        />
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
     return (
         <div className={styles.main_container}>
+            {/* Selected files */}
+            <div className={styles.selected_files_container}>
+                {renderFilesPreview()}
+            </div>
             <div className={styles.sub_container}>
+                {/* File Upload */}
+                <div className={styles.file_upload_container}>
+                    <Paperclip className={styles.file_upload_icon} />
+                    <input
+                        type="file"
+                        multiple={true}
+                        accept=".doc,.docx,.pdf,.txt"
+                        onChange={fileInput}
+                        className={styles.file_input}
+                    />
+                </div>
                 {/* Input */}
                 <textarea
                     ref={inputRef}
