@@ -73,7 +73,8 @@ export default function ChatBox(
             timestamp: getTimestamp(),
             content: message.trim(),
             source: 'user',
-            agent_name: agentName
+            agent_name: agentName,
+            assets: (files.length > 0) ? files.map(file => file.name) : null
         }
         const messageToSend = message.trim()
 

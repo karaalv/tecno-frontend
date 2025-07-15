@@ -9,7 +9,7 @@ import fonts from '@/styles/common/typography.module.css'
 import styles from '@/styles/components/AgentMessage.module.css'
 
 export default function AgentMessage(
-    { message }: Readonly<{ message: string }>,
+    { message, assets }: Readonly<{ message: string, assets?: string[] }>,
 ) {
     return (
         <div className={`${styles.container} ${fonts.body}`}>

@@ -12,6 +12,7 @@ export interface AgentChatMemory {
     content: string;
     source: 'agent' | 'user';
     agent_name: string;
+    assets: string[] | null;
 }
 
 export interface BackendResponse<T> {

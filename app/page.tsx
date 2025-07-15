@@ -55,14 +55,16 @@ export default function OnboardingPage() {
                     return (
                         <UserMessage 
                             key={message.chat_id} 
-                            message={message.content} 
+                            message={message.content}
+                            assets={message.assets || []}
                         />
                     )
                 } else if (message.source === 'agent') {
                     return (
                         <AgentMessage 
                             key={message.chat_id} 
-                            message={message.content} 
+                            message={message.content}
+                            assets={message.assets || []}
                         />
                     )
                 }
