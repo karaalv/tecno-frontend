@@ -1,0 +1,73 @@
+/* Document Page Styles */
+
+.container {
+    /* Properties */
+    width: 100%;
+    height: 100vh;
+
+    /* Arrangement */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Header */
+
+.header {
+    /* Properties */
+    width: 100%;
+    padding: 1rem;
+
+    /* Arrangement */
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    border-bottom: 0.25rem solid #e5e7eb;
+}
+
+.title {
+    /* Properties */
+    font-family: var(--Primary_font);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--Primary);
+}
+
+.download_button {
+    height: 3rem;
+    width: 3rem;
+    border-radius: var(--Radius);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.download_button:hover {
+    background-color: #e5e7eb;
+    cursor: pointer;
+}
+
+.download_icon {
+    /* Properties */
+    width: 2rem;
+    height: 2rem;
+    color: var(--Primary);
+}
+
+/* Document Viewer */
+.document_viewer {
+    /* Properties */
+    width: 100%;
+    height: calc(100vh - 4rem);
+    
+    /* Arrangement */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    
+    /* Background */
+    background-color: #f3f4f6;
+}
+
+

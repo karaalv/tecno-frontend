@@ -6,107 +6,46 @@
  * The messages are loaded from the server and
  * displayed in the chat section.
  */
-
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
+import { PanelRightOpen } from 'lucide-react'
 
 // Components
-import ChatBox from '@/components/ChatBox'
-import UserMessage from '@/components/UserMessage'
-import AgentMessage from '@/components/AgentMessage'
-import ErrorMessage from '@/components/ErrorMessage'
-import ResponseLoader from '@/components/ResponseLoader'
-
-// Types
-import { AgentChatMemory } from '@/types/app.types'
+import ChatPage from '@/components/pages/ChatPage'
+import DocumentPage from '@/components/pages/DocumentPage'
 
 // Styles
-import styles from '@/styles/pages/onboarding_page.module.css'
+import styles from '@/styles/pages/MainPage.module.css'
 
-// Services
-import { getOnboardingChatHistory } from '@/services/interface'
-
-export default function OnboardingPage() {
-
-    const [messages, setMessages] = useState<AgentChatMemory[]>([])
-    const [error, setError] = useState<string>('')
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const chatSectionRef = useRef<HTMLDivElement>(null)
-
-    const loadData = async () => {
-        setIsLoading(true)
-        try {
-            const data: AgentChatMemory[] = await getOnboardingChatHistory()
-            console.log('Loaded messages from server:')
-            console.log(data)
-            setMessages(data)
-            setError('')
-        } catch (err) {
-            console.error('Error loading messages:', err)
-            setError('Failed to load messages. Please try again later.')
-        } finally {
-            setIsLoading(false)
-        }
-    }
-
-    const renderMessages = () => {
-        return (
-            messages.map((message: AgentChatMemory) => {
-                if (message.source === 'user') {
-                    return (
-                        <UserMessage 
-                            key={message.chat_id} 
-                            message={message.content}
-                            assets={message.assets || []}
-                        />
-                    )
-                } else if (message.source === 'agent') {
-                    return (
-                        <AgentMessage 
-                            key={message.chat_id} 
-                            message={message.content}
-                            assets={message.assets || []}
-                        />
-                    )
-                }
-            })
-        )
-    }
-
-    // Auto-scroll to bottom when new messages are added
-    useEffect(() => {
-        if (chatSectionRef.current) {
-            chatSectionRef.current.scrollTop = chatSectionRef.current.scrollHeight
-        }
-    }, [messages])
-
-    useEffect(() => {
-        loadData()
-    }, [])
-
-    const renderError = () => {
-        return (
-            <ErrorMessage error={error}/>
-        )
+export default function MainPage() {
+    const [isDocumentPanelOpen, setIsDocumentPanelOpen] = useState(false)
+    
+    const toggleDocumentPanel = () => {
+        setIsDocumentPanelOpen(!isDocumentPanelOpen)
     }
     
     return (
-        <div className={styles.main_container}>
-            {/* Messages */}
-            <div 
-                ref={chatSectionRef} 
-                className={styles.chat_section}
+        <div className={styles.container}>
+            <button 
+                className={styles.panel_toggle}
+                onClick={toggleDocumentPanel}
             >
-                {renderMessages()}
-                {isLoading && <ResponseLoader />}
-                {error && renderError()}
+                <PanelRightOpen className={styles.panel_icon} />
+            </button>
+            
+            <div 
+                className={`
+                    ${styles.chat_section} 
+                    ${isDocumentPanelOpen ? styles.chat_section_narrow : ''}
+                `}
+            >
+                <ChatPage />
             </div>
-            {/* Chat Box */}
-            <ChatBox 
-                messages={messages} 
-                setMessages={setMessages}
-                setError={setError}
-                setIsLoading={setIsLoading}
-            />
+            
+            {isDocumentPanelOpen && (
+                <div className={styles.document_panel}>
+                    <DocumentPage />
+                </div>
+            )}
         </div>
     )
 }
