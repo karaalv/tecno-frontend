@@ -7,8 +7,11 @@
 import type { Metadata } from "next"
 
 // Styles
-import styles from "@/styles/root.module.css"
-import '@styles/globals.css'
+import styles from "@/styles/common/root.module.css"
+import '@styles/common/globals.css'
+
+// Context
+import AppProvider from "@/contexts/AppContext"
 
 export const metadata: Metadata = {
     title: "Tecno ESG",
@@ -20,7 +23,9 @@ export default function RootLayout(
     return (
         <html lang="en" className={styles.html}>
             <body>
-                {children}
+                <AppProvider>
+                    {children}
+                </AppProvider>
             </body>
         </html>
     )

@@ -2,22 +2,21 @@
  * @description This component displays a
  * message from the agent in the chat.
  */
+import ReactMarkdown from 'react-markdown'
 
 // Styles
-import fonts from '@/styles/typography.module.css'
-import styles from '@/styles/AgentMessage.module.css'
+import fonts from '@/styles/common/typography.module.css'
+import styles from '@/styles/components/AgentMessage.module.css'
 
 export default function AgentMessage(
-    { message }: Readonly<{ message: string }>,
+    { message, assets }: Readonly<{ message: string, assets?: string[] }>,
 ) {
-    
     return (
-        <div className={styles.container}>
-            <p className={fonts.body}>
-                {message}
-            </p>
+        <div className={`${styles.container} ${fonts.body}`}>
+                <ReactMarkdown>
+                    {message}
+                </ReactMarkdown>
             <div 
-                className={fonts.body}
                 style={{
                     color: 'var(--Grey)',
                     fontWeight: '500',

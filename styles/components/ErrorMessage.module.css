@@ -1,0 +1,24 @@
+.container {
+    /* Properties */
+    background-color: var(--Danger_50);
+    border-radius: var(--Radius);
+    padding: 1%;
+    box-sizing: border-box;
+
+    /* Dimensions */
+    width: 100%;
+    height: fit-content;
+
+    /* Arrangement */
+    display: block;
+    align-self: center;
+
+    text-align: left;
+    white-space: pre-wrap; 
+    word-wrap: break-word;
+
+    /* Font */
+    font-family: var(--Primary_font);
+    color: var(--Secondary);
+    font-size: 2.4rem;
+}

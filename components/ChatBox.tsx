@@ -5,27 +5,37 @@
  * to enter messages.
  */
 
-import { useState, useEffect, useRef } from 'react'
-import { ArrowUp } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { ArrowUp, Paperclip, FileText, X } from 'lucide-react'
+import { getTimestamp } from '@/utils/processing'
+
+// Context
+import { useAppContext } from '@/contexts/AppContext'
 
 // Types
-import { Message } from '@/types/app.types'
+import { AgentChatMemory } from '@/types/app.types'
 
 // Services
-import { chatBot } from '@/services/backend'
+import { messageOnboardingChat, uploadFiles } from '@/services/interface'
 
 // Styles
-import styles from '@/styles/ChatBox.module.css'
-import fonts from '@/styles/typography.module.css'
+import styles from '@/styles/components/ChatBox.module.css'
+import fonts from '@/styles/common/typography.module.css'
 
 interface ChatBoxProps {
-    messages: Message[]
-    setMessages: React.Dispatch<React.SetStateAction<Message[]>>
+    messages: AgentChatMemory[]
+    setMessages: React.Dispatch<React.SetStateAction<AgentChatMemory[]>>
 }
 
-export default function ChatBox({ messages, setMessages }: ChatBoxProps) {
+export default function ChatBox(
+    { messages, setMessages }: ChatBoxProps
+) {
+    const userId = 'user_001'
+    const agentName = 'onboarding_agent'
+    const { isLoading, setIsLoading } = useAppContext()
+    const { error, setError } = useAppContext()
     const [message, setMessage] = useState<string>('')
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [files, setFiles] = useState<File[]>([])
     const inputRef = useRef<HTMLTextAreaElement>(null)
 
     const chatInput = (
@@ -44,14 +54,31 @@ export default function ChatBox({ messages, setMessages }: ChatBoxProps) {
         setMessage(event.target.value)
     }
 
-    const sendMessage = async () => {
-        if (!message.trim() || isLoading) return
+    const fileInput = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const selectedFiles = Array.from(event.target.files || [])
+        setFiles(prev=> [...prev, ...selectedFiles])
+        // Reset input value to allow re-uploading the same file
+        event.target.value = ''
+    }
 
-        const userMessage: Message = {
-            id: Date.now().toString(),
-            content: message.trim(),
-            source: 'user'
+    const sendMessage = async () => {
+        
+        if (!message.trim() || isLoading) {
+            return
         }
+
+        const userMessage: AgentChatMemory = {
+            user_id: userId,
+            chat_id: `${userId}-${agentName}-${getTimestamp()}`,
+            timestamp: getTimestamp(),
+            content: message.trim(),
+            source: 'user',
+            agent_name: agentName,
+            assets: (files.length > 0) ? files.map(file => file.name) : null
+        }
+        const messageToSend = message.trim()
 
         // Add user message to the chat
         setMessages(prev => [...prev, userMessage])
@@ -65,35 +92,89 @@ export default function ChatBox({ messages, setMessages }: ChatBoxProps) {
         setIsLoading(true)
 
         try {
-            // Send message to backend and get response
-            const responseMessages = await chatBot(userMessage.content)
+            let responseMessage: AgentChatMemory | null = null
             
+            if (files.length > 0) {
+                const filesToUpload = files
+                setFiles([])
+
+                // Upload files and get file upload response
+                responseMessage = await uploadFiles(
+                    userId,
+                    messageToSend,
+                    filesToUpload
+                )
+            } else {
+                // Send regular message
+                responseMessage = await messageOnboardingChat(
+                    userId,
+                    messageToSend
+                )
+            }
+
             // Add response messages to the chat
-            setMessages(responseMessages)
+            setMessages(prev => [...prev, responseMessage!])
+            setError('')
         } catch (error) {
             console.error('Error sending message:', error)
-            // Optionally add an error message to the chat
-            const errorMessage: Message = {
-                id: (Date.now() + 1).toString(),
-                content: 'Sorry, there was an error processing your message.',
-                source: 'agent'
-            }
-            setMessages(prev => [...prev, errorMessage])
+            setError('Failed to send message. Please try again later.')
         } finally {
             setIsLoading(false)
         }
     }
 
-    const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const handleKeyPress = (
+        event: React.KeyboardEvent<HTMLTextAreaElement>
+    ) => {
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault()
             sendMessage()
         }
     }
 
+    const removeFile = (index: number) => {
+        setFiles(prev => prev.filter((_, i) => i !== index))
+    }
+
+    const renderFilesPreview = () => {
+        if (files.length === 0) {
+            return <></>
+        }
+
+        return (
+            <div className={styles.files_preview}>
+                {files.map((file, index) => (
+                    <div key={index} className={styles.file_item}>
+                        <FileText className={styles.file_icon} />
+                        <span className={fonts.body}>{file.name}</span>
+                        <X 
+                            className={styles.remove_file_button}
+                            onClick={() => removeFile(index)}
+                        />
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
     return (
         <div className={styles.main_container}>
+            {/* Selected files */}
+            <div className={styles.selected_files_container}>
+                {renderFilesPreview()}
+            </div>
             <div className={styles.sub_container}>
+                {/* File Upload */}
+                <div className={styles.file_upload_container}>
+                    <Paperclip className={styles.file_upload_icon} />
+                    <input
+                        type="file"
+                        multiple={true}
+                        accept=".doc,.docx,.pdf,.txt"
+                        onChange={fileInput}
+                        className={styles.file_input}
+                    />
+                </div>
                 {/* Input */}
                 <textarea
                     ref={inputRef}

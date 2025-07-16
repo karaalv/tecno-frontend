@@ -1,0 +1,72 @@
+/* Main Page Styles */
+
+.container {
+    /* Properties */
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+    position: relative;
+    
+    /* Arrangement */
+    display: flex;
+    overflow: hidden;
+}
+
+.panel_toggle {
+    /* Position */
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 100;
+    
+    /* Properties */
+    width: 4rem;
+    height: 4rem;
+    border: none;
+    border-radius: var(--Radius);
+    background-color: #f3f4f6;
+    cursor: pointer;
+    
+    /* Arrangement */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Transitions */
+    transition: background-color 0.2s ease;
+}
+
+.panel_icon {
+    width: 2rem;
+    height: 2rem;
+    color: var(--Primary);
+}
+
+.panel_toggle:hover {
+    background-color: #e5e7eb;
+}
+
+.chat_section {
+    /* Properties */
+    width: 100%;
+    height: 100vh;
+    align-self: center;
+    
+    /* Transitions */
+    transition: width 0.3s ease;
+}
+
+.chat_section_narrow {
+    width: 50%;
+}
+
+.document_panel {
+    /* Properties */
+    width: 50%;
+    height: 100vh;
+    background-color: #ffffff;
+    border-left: 0.25rem solid #e5e7eb;
+    
+    /* Transitions */
+    transition: width 0.3s ease;
+}

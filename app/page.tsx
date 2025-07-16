@@ -6,83 +6,50 @@
  * The messages are loaded from the server and
  * displayed in the chat section.
  */
+import { useState } from 'react'
+import { PanelRightOpen } from 'lucide-react'
 
-import { useState, useEffect, useRef } from 'react'
+// Context
+import { useAppContext } from '@/contexts/AppContext'
 
 // Components
-import ChatBox from '@/components/ChatBox'
-import UserMessage from '@/components/UserMessage'
-import AgentMessage from '@/components/AgentMessage'
-
-// Types
-import { Message } from '@/types/app.types'
+import ChatPage from '@/components/pages/ChatPage'
+import DocumentPage from '@/components/pages/DocumentPage'
 
 // Styles
-import styles from '@/styles/page.module.css'
+import styles from '@/styles/pages/MainPage.module.css'
 
-// Services
-import { chatBot } from '@/services/backend'
+export default function MainPage() {
 
-export default function Home() {
-
-    const [messages, setMessages] = useState<Message[]>([])
-    const chatSectionRef = useRef<HTMLDivElement>(null)
-
-    const loadData = async () => {
-        // TO DO:: Load data from the server
-        const data: Message[] = await chatBot(null)
-        console.log('Loaded messages from server:')
-        console.log(data)
-        setMessages(data)
+    const [isDocumentPanelOpen, setIsDocumentPanelOpen] = useState(false)
+    
+    const toggleDocumentPanel = () => {
+        setIsDocumentPanelOpen(!isDocumentPanelOpen)
     }
-
-    const renderMessages = () => {
-        return (
-            messages.map((message: Message) => {
-                if (message.source === 'user') {
-                    return (
-                        <UserMessage 
-                            key={message.id} 
-                            message={message.content} 
-                        />
-                    )
-                } else if (message.source === 'agent') {
-                    return (
-                        <AgentMessage 
-                            key={message.id} 
-                            message={message.content} 
-                        />
-                    )
-                }
-            })
-        )
-    }
-
-    // Auto-scroll to bottom when new messages are added
-    useEffect(() => {
-        if (chatSectionRef.current) {
-            chatSectionRef.current.scrollTop = chatSectionRef.current.scrollHeight
-        }
-    }, [messages])
-
-    useEffect(() => {
-        loadData()
-    }, [])
     
     return (
-        <div className={styles.main_container}>
-            {/* Messages */}
-            <div 
-                ref={chatSectionRef} 
-                className={styles.chat_section}
+        <div className={styles.container}>
+            <button 
+                className={styles.panel_toggle}
+                onClick={toggleDocumentPanel}
             >
-                {renderMessages()}
+                <PanelRightOpen className={styles.panel_icon} />
+            </button>
+            
+            <div 
+                className={`
+                    ${styles.chat_section} 
+                    ${isDocumentPanelOpen ? styles.chat_section_narrow : ''}
+                `}
+            >
+                <ChatPage />
             </div>
-            {/* Chat Box */}
-            <ChatBox 
-                messages={messages} 
-                setMessages={setMessages} 
-            />
+            
+            {isDocumentPanelOpen && (
+                <div className={styles.document_panel}>
+                    <DocumentPage />
+                </div>
+            )}
         </div>
     )
 }
