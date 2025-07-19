@@ -41,7 +41,6 @@ export default function OnboardingPage() {
         setIsLoading(true)
         try {
             const data: AgentChatMemory[] = await getOnboardingChatHistory()
-            console.log('Loaded messages from server:')
             setMessages(data)
             setError('')
         } catch (err) {
@@ -100,7 +99,7 @@ export default function OnboardingPage() {
                 ref={chatSectionRef}
                 className={styles.chat_section}
             >
-                {renderMessages()}
+                {messages && renderMessages()}
                 {isLoading && <ResponseLoader />}
                 {error && renderError()}
             </div>

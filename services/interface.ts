@@ -88,7 +88,7 @@ async function startOnboardingChat(
         'POST'
     )
 
-    if (!response.success) {
+    if (!response.success || !response.data) {
         throw new Error(
             response.error || 'Failed to start onboarding chat'
         )
